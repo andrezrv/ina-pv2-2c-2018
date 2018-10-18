@@ -1,18 +1,28 @@
 <?php
+ini_set( 'display_errors', 1 );
 // index.php
 
 // Incluir todos los archivos que necesitamos:
 require dirname( __FILE__ ) . '/url.php';
 require_once dirname( __FILE__ ) . '/config.php';
 require_once dirname( __FILE__ ) . '/includes/functions.php';
+require_once SITE_PATH . '/classes/class-user.php';
 require_once SITE_PATH . '/classes/class-link.php';
+require_once SITE_PATH . '/classes/class-nav.php';
 
-$link = new Link( 'Contacto', 'contact.php', '_blank', 'Contacto' );
+// $user = new User( 1, 'Juana', 'Molina', 'juanamolina', 'juanamolina@gmail.com', 'admin' );
 
-var_dump( $link );
+$user = new User( array(
+  'name'     => 'Juana',
+  'id'       => 1,
+  'lastname' => 'Molina',
+  'username' => 'juanamolina',
+  'email'    => 'juanamolina@gmail.com',
+  'role'     => 'admin',
+) );
 
-$link->render();
-
+$user->id = 5;
+echo $user->id;
 die();
 
 // Mostrar página actual:

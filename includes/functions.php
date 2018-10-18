@@ -32,3 +32,42 @@ function get_template( $name ) {
     include SITE_PATH . '/templates/' . $name . '.php';
   }
 }
+
+function nav() {
+  $links = array();
+
+  $nav_data = array(
+    array(
+      'name'   => 'Inicio',
+      'href'   => SITE_URL,
+      'target' => '_self',
+      'title'  => 'Inicio',
+    ),
+    array(
+      'name'   => 'Novedades',
+      'href'   => SITE_URL . 'index.php?page=novedades',
+      'target' => '_self',
+      'title'  => 'Novedades',
+    ),
+    array(
+      'name'   => 'Contacto',
+      'href'   => SITE_URL . 'index.php?page=contacto',
+      'target' => '_self',
+      'title'  => 'Contacto',
+    ),
+    array(
+      'name'   => 'Nosotros',
+      'href'   => SITE_URL . 'index.php?page=nosotros',
+      'target' => '_self',
+      'title'  => 'Nosotros',
+    ),
+  );
+
+  foreach ( $nav_data as $link_data ) {
+    $links[] = new Link( $link_data['name'], $link_data['href'], $link_data['target'], $link_data['title'] );
+  }
+
+  $nav = new Nav( $links, 'site-header-nav', 'site-nav' );
+
+  $nav->render();
+}
