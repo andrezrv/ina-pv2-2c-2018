@@ -61,6 +61,12 @@ function nav() {
       'target' => '_self',
       'title'  => 'Nosotros',
     ),
+    array(
+      'name'   => 'Registrarme',
+      'href'   => SITE_URL . 'index.php?page=user/register',
+      'target' => '_self',
+      'title'  => 'Registrarme',
+    ),
   );
 
   foreach ( $nav_data as $link_data ) {
@@ -70,4 +76,25 @@ function nav() {
   $nav = new Nav( $links, 'site-header-nav', 'site-nav' );
 
   $nav->render();
+}
+
+function db() {
+  static $db = null;
+
+  if ( is_null( $db ) ) {
+    $db = new Database( array(
+      'host'     => DB_HOST,
+      'username' => DB_USER,
+      'password' => DB_PASS,
+      'name'     => DB_NAME,
+    ) );
+
+    $db->connect();
+  }
+
+  return $db;
+}
+
+function create_user() {
+  return User::create();
 }
