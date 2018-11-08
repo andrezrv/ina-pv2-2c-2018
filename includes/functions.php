@@ -67,6 +67,12 @@ function nav() {
       'target' => '_self',
       'title'  => 'Registrarme',
     ),
+    array(
+      'name'   => 'Ver Usuarios',
+      'href'   => SITE_URL . 'index.php?page=user/list',
+      'target' => '_self',
+      'title'  => 'Ver Usuarios',
+    ),
   );
 
   foreach ( $nav_data as $link_data ) {
@@ -97,4 +103,55 @@ function db() {
 
 function create_user() {
   return User::create();
+}
+
+function delete_user() {
+  User::delete();
+}
+
+function print_user_message_maybe() {
+  $message = User::get_message();
+
+  if ( ! $message ) {
+    return;
+  }
+
+  echo $message;
+}
+
+function view_users_table() {
+  $users = User::list();
+
+  if ( empty( $users ) ) {
+    return;
+  }
+
+  ?>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Lastname</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ( $users as $user ) : ?>
+        <tr>
+          <td><?php echo $user->id; ?></td>
+          <td><?php echo $user->name; ?></td>
+          <td><?php echo $user->lastname; ?></td>
+          <td><?php echo $user->username; ?></td>
+          <td><?php echo $user->email; ?></td>
+          <td><?php echo $user->role; ?></td>
+          <td><a href="<?php echo SITE_URL . 'index.php?page=user/list&action=delete_user&id=' . $user->id; ?>">Eliminar</a></td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+  <?php
 }

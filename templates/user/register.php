@@ -3,9 +3,7 @@
 
 <h2>Registrarme</h2>
 
-<?php if ( User::get_message() ) {
-  echo User::get_message();
-} ?>
+<?php print_user_message_maybe(); ?>
 
 <form action="" method="post">
   <p>
