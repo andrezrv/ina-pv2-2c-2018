@@ -26,6 +26,10 @@ class User {
       return;
     }
 
+    if ( isset( $_GET['action'] ) && $_GET['action'] === 'edit_user' ) {
+      return;
+    }
+
     $query = '';
 
     $name     = isset( $_POST['name'] ) ? $_POST['name'] : '';
@@ -53,12 +57,37 @@ class User {
     return self::$message;
   }
 
-  public function modify() {
+  public static function modify() {
+    if ( empty( $_POST ) ) {
+      return;
+    }
 
+    if ( isset( $_GET['action'] ) && $_GET['action'] !== 'edit_user' ) {
+      return;
+    }
+
+    $query = '';
+
+    $id       = isset( $_GET['id'] ) ? $_GET['id'] : null;    
+    $name     = isset( $_POST['name'] ) ? $_POST['name'] : '';
+    $lastname = isset( $_POST['lastname'] ) ? $_POST['lastname'] : '';
+    $email    = isset( $_POST['email'] ) ? $_POST['email'] : '';
+    $username = isset( $_POST['username'] ) ? $_POST['username'] : '';
+
+    if ( $name && $lastname && $email && $username ) {
+      $query = "UPDATE users
+      SET name = '$name', lastname = '$lastname', email = '$email', username = '$username'
+      WHERE id = '$id'";
+    }
+
+    if ( $query ) {
+      db()->query( $query );
+      self::$message = 'El usuario se modificó correctamente.';
+    }
   }
 
   public static function delete() {
-    if ( empty( $_GET['delete_user'] ) && empty( $_GET['id'] ) ) {
+    if ( empty( $_GET['delete_user'] ) || empty( $_GET['id'] ) ) {
       return;
     }
 
@@ -96,6 +125,17 @@ class User {
 
   public function view() {
 
+  }
+
+  public static function get_by_id( $id ) {
+    $query = "SELECT * FROM users WHERE id = '$id' LIMIT 0,1";
+    $results = db()->get_results( $query );
+
+    if ( ! empty( $results ) ) {
+      return new self( $results[0] );
+    }
+
+    return null;
   }
 
   public static function list() {

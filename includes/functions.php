@@ -105,6 +105,10 @@ function create_user() {
   return User::create();
 }
 
+function modify_user() {
+  return User::modify();
+}
+
 function delete_user() {
   User::delete();
 }
@@ -148,7 +152,11 @@ function view_users_table() {
           <td><?php echo $user->username; ?></td>
           <td><?php echo $user->email; ?></td>
           <td><?php echo $user->role; ?></td>
-          <td><a href="<?php echo SITE_URL . 'index.php?page=user/list&action=delete_user&id=' . $user->id; ?>">Eliminar</a></td>
+          <td>
+            <a href="<?php echo SITE_URL . 'index.php?page=user/list&action=delete_user&id=' . $user->id; ?>">Eliminar</a>
+            <a href="<?php echo SITE_URL . 'index.php?page=user/edit&action=edit_user&id=' . $user->id; ?>">Modificar</a>
+            <a href="<?php echo SITE_URL . 'index.php?page=user/details&id=' . $user->id; ?>">Ver Detalles</a>
+          </td>
         </tr>
       <?php endforeach; ?>
     </tbody>
