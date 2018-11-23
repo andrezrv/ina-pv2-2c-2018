@@ -1,4 +1,9 @@
 <?php
+if ( ! is_logged_in() ) {
+  echo "Usted no tiene permisos para ver esta página.";
+  return;
+}
+
 $id   = isset( $_GET['id'] ) ? $_GET['id'] : null;
 $user = User::get_by_id( $id );
 ?>

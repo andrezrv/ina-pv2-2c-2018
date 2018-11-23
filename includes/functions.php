@@ -67,13 +67,30 @@ function nav() {
       'target' => '_self',
       'title'  => 'Registrarme',
     ),
-    array(
+  );
+
+  if ( is_logged_in() ) {
+    $nav_data[] = array(
       'name'   => 'Ver Usuarios',
       'href'   => SITE_URL . 'index.php?page=user/list',
       'target' => '_self',
       'title'  => 'Ver Usuarios',
-    ),
-  );
+    );
+
+    $nav_data[] = array(
+      'name'   => 'Cerrar Sesión',
+      'href'   => SITE_URL . 'logout.php',
+      'target' => '_self',
+      'title'  => 'Cerrar Sesión',
+    );
+  } else {
+    $nav_data[] = array(
+      'name'   => 'Ingresar',
+      'href'   => SITE_URL . 'index.php?page=user/login',
+      'target' => '_self',
+      'title'  => 'Ingresar'
+    );
+  }
 
   foreach ( $nav_data as $link_data ) {
     $links[] = new Link( $link_data['name'], $link_data['href'], $link_data['target'], $link_data['title'] );
@@ -124,7 +141,11 @@ function print_user_message_maybe() {
 }
 
 function view_users_table() {
-  $users = User::list();
+  if ( ! is_logged_in() ) {
+    return;
+  }
+
+  $users = User::get_list();
 
   if ( empty( $users ) ) {
     return;
@@ -162,4 +183,16 @@ function view_users_table() {
     </tbody>
   </table>
   <?php
+}
+
+function is_logged_in() {
+  return User::validate();
+}
+
+function login_user() {
+  return User::login();
+}
+
+function get_logged_user() {
+  return User::get_logged_user();
 }

@@ -68,7 +68,7 @@ class User {
 
     $query = '';
 
-    $id       = isset( $_GET['id'] ) ? $_GET['id'] : null;    
+    $id       = isset( $_GET['id'] ) ? $_GET['id'] : null;
     $name     = isset( $_POST['name'] ) ? $_POST['name'] : '';
     $lastname = isset( $_POST['lastname'] ) ? $_POST['lastname'] : '';
     $email    = isset( $_POST['email'] ) ? $_POST['email'] : '';
@@ -111,16 +111,48 @@ class User {
     self::$message = 'El usuario se eliminó correctamente';
   }
 
-  public function login() {
+  public static function login() {
+    if ( empty( $_POST['action'] ) || $_POST['action'] !== 'login' ) {
+      return;
+    }
 
+    if ( empty( $_POST['username'] ) || empty( $_POST['password'] ) ) {
+      self::$message = "Ingrese nombre de usuario y contraseña.";
+      return;
+    }
+
+    $password = md5( $_POST['password'] );
+    $username = $_POST['username'];
+
+    $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password' LIMIT 0,1";
+
+    $results = db()->get_results( $query );
+
+    if ( ! is_array( $results ) ) {
+      self::$message = "No se encontró un usuario con los datos ingresados.";
+      return;
+    }
+
+    $user_data = $results[0];
+
+    $user = new User( $user_data );
+
+    $_SESSION['logged_user'] = array(
+      'id'       => $user->id,
+      'username' => $user->username,
+    );
+
+    header('Location:index.php');
   }
 
   public function logout() {
 
   }
 
-  public function validate() {
+  public static function validate() {
+    $session_exists = ! empty( $_SESSION['logged_user'] );
 
+    return $session_exists;
   }
 
   public function view() {
@@ -138,7 +170,15 @@ class User {
     return null;
   }
 
-  public static function list() {
+  public static function get_logged_user() {
+    if ( self::validate() ) {
+      return self::get_by_id( $_SESSION['logged_user']['id'] );
+    }
+
+    return null;
+  }
+
+  public static function get_list() {
     $query = "SELECT id, name, lastname, username, email, role FROM users WHERE 1";
     $results = db()->get_results( $query );
     $users = array();
